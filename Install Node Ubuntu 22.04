@@ -1,0 +1,126 @@
+Tutorial - Install node on Ubuntu Server 22.04
+
+Upgrade your coin to make use of this tutorial.
+
+Install a node for your coin on Ubuntu Server 22.04 with the following tutorial.
+
+Update your Ubuntu server with the following command:
+
+sudo apt-get update && sudo apt-get upgrade -y
+
+Install the required dependencies with the following command:
+
+sudo apt-get install build-essential cmake libminiupnpc-dev libevent-dev libzmq3-dev unzip -y
+
+Download Boost with the following command:
+
+wget https://boostorg.jfrog.io/artifactory/main/release/1.65.1/source/boost_1_65_1.tar.gz
+
+Extract the tar file with the following command:
+
+tar -xzvf boost_1_65_1.tar.gz
+
+Install Boost with the following commands:
+
+cd boost_1_65_1
+./bootstrap.sh --prefix=/usr/local
+./b2
+sudo ./b2 install
+
+Type the following command to open your home directory:
+
+cd $HOME
+
+Download Berkeley DB with the following command:
+
+wget http://download.oracle.com/berkeley-db/db-4.8.30.zip
+
+Unzip file with the following command:
+
+unzip db-4.8.30.zip
+
+Install Berkeley DB with the following commands:
+
+cd db-4.8.30
+sed -i 's/__atomic_compare_exchange/__atomic_compare_exchange_db/g' dbinc/atomic.h
+cd build_unix/
+../dist/configure --prefix=/usr/local --enable-cxx
+make
+sudo make install
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
+
+Type the following command to open your home directory:
+
+cd $HOME
+
+Download OpenSSL with the following command:
+
+wget https://www.openssl.org/source/openssl-1.1.1t.tar.gz
+
+Extract the tar file with the following command:
+
+tar -xzvf openssl-1.1.1t.tar.gz
+
+Install OpenSSL with the following commands:
+
+cd openssl-1.1.1t
+./config
+make
+sudo make install
+
+Create symlinks with the following commands:
+
+cd /usr/lib/x86_64-linux-gnu
+sudo ln -s libminiupnpc.so /usr/lib/x86_64-linux-gnu/libminiupnpc.so.10
+sudo ln -s libevent_pthreads.so /usr/lib/x86_64-linux-gnu/libevent_pthreads-2.1.so.6
+sudo ln -s libevent.so /usr/lib/x86_64-linux-gnu/libevent-2.1.so.6
+
+Type the following command to open your home directory:
+
+cd $HOME
+
+Download the Linux daemon for your wallet with the following command:
+
+wget "https://github.com/LunariumCoin/LunariumCoin-2.0/releases/download/2.0.2.0/XLN-Linux2204.tar.gz" -O XLN-Linux2204.tar.gz
+
+Extract the tar file with the following command:
+
+tar -xzvf XLN-Linux2204.tar.gz
+
+Type the following command to install the daemon and tools for your wallet:
+
+sudo mv lunariumcoind lunariumcoin-cli lunariumcoin-tx /usr/bin/
+sudo rm lunariumcoin-qt
+
+Create the data directory for your coin with the following command:
+
+mkdir $HOME/.lunariumcoin
+
+Open nano.
+
+nano $HOME/.lunariumcoin/lunariumcoin.conf -t
+
+Paste the following into nano.
+
+rpcuser=rpc_lunariumcoin
+rpcpassword=20da9358d5bbf0dbf0d45d6c3
+rpcallowip=127.0.0.1
+listen=1
+server=1
+txindex=1
+daemon=1
+deprecatedrpc=accounts
+rpcallowip=45.94.209.55
+rpcallowip=84.54.23.196
+rpcallowip=164.68.123.250
+rpcallowip=167.86.80.59
+addnode=84.54.23.196
+addnode=164.68.123.250
+addnode=167.86.80.59
+addnode=45.94.209.55
+
+Save the file with the keyboard shortcut ctrl + x.
+
+Type the following command to start your node:
+
+lunariumcoind
